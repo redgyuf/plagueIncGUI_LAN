@@ -30,6 +30,7 @@ public class Client {
 	public void open(String[] data, ChooseStat popup) {
 		Display display = Display.getDefault();
 		Shell shell = new Shell();
+		shell.setImage(SWTResourceManager.getImage("C:\\Users\\danEx\\Desktop\\CodeCool\\java_tw\\plagueIncGUI_LAN\\Client\\src\\pics\\5fb2756cdf746a3ec3b99c89a0675bac407.jpg"));
 		shell.setBackground(SWTResourceManager.getColor(SWT.COLOR_TITLE_BACKGROUND_GRADIENT));
 		shell.setSize(800, 600);
 		shell.setText("Plague Inc. - Client");

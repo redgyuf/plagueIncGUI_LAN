@@ -30,7 +30,7 @@ public class ChooseStat {
 		shell.setText("Plague Inc. ChooseStat");
 		shell.setLocation(mainWindow.getShell().toDisplay(100, 0));
 		
-		ProgressBar progressBar = new ProgressBar(shell, SWT.APPLICATION_MODAL);		
+		ProgressBar progressBar = new ProgressBar(shell, SWT.APPLICATION_MODAL);
 		progressBar.setBounds(84, 30, 414, 17);
 		progressBar.setSelection(100);
 		
@@ -57,9 +57,16 @@ public class ChooseStat {
 		    public void run() {		
 		    	if(i <= 0)
 		    		shell.setVisible(false);
+		    	
+		    	if(i > 50)
+		    		progressBar.setState(SWT.NORMAL);
+		    	else
+		    		progressBar.setState(SWT.PAUSED);
+		    	if(i < 20)
+		    		progressBar.setState(SWT.ERROR);
 		    	progressBar.setSelection(i);
-		    	i -= 2.5;	        
-		    	display.timerExec(250, this);		    	
+		    	i -= 1;	        
+		    	display.timerExec(100, this);		    	
 		    }
 		};
 		display.timerExec(1, timer);
