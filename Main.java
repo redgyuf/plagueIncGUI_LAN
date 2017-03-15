@@ -1,3 +1,4 @@
+import org.eclipse.swt.SWT;
 
 public class Main {
 
@@ -7,7 +8,9 @@ public class Main {
 		
 		try {
 			Client window = new Client();
-			window.open(data);
+			ChooseStat popup = new ChooseStat(window);
+			window.open(data, popup);
+			
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
