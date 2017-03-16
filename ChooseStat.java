@@ -10,19 +10,22 @@ import org.eclipse.swt.graphics.Rectangle;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.wb.swt.SWTResourceManager;
 import org.eclipse.swt.custom.CLabel;
+import org.eclipse.swt.events.MouseAdapter;
+import org.eclipse.swt.events.MouseEvent;
+import org.eclipse.swt.events.SelectionAdapter;
+import org.eclipse.swt.events.SelectionEvent;
 
 public class ChooseStat {
 	private Client mainWindow;
-	
-	public ChooseStat(Client window) {
-		this.mainWindow = window;
-	}
 
 	/**
 	 * Open the window.
 	 * @wbp.parser.entryPoint
+	
 	 */
-	public void open() {
+	
+	
+	public void open() {		
 		Display display = Display.getDefault();
 		Shell shell = new Shell();
 		shell.setBackground(SWTResourceManager.getColor(SWT.COLOR_TITLE_BACKGROUND_GRADIENT));
@@ -34,16 +37,38 @@ public class ChooseStat {
 		progressBar.setBounds(84, 30, 414, 17);
 		progressBar.setSelection(100);
 		
-		Button button = new Button(shell, SWT.NONE);
-		button.setBounds(84, 53, 75, 25);
+		Button buttonLethality = new Button(shell, SWT.NONE);
+		buttonLethality.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseUp(MouseEvent e) {
+				mainWindow.setChoosedStat("Lethality");
+				shell.setVisible(false);
+			}
+		});
+		buttonLethality.setText("Lethality");
+		buttonLethality.setBounds(84, 53, 75, 25);
 		
-		Button button_1 = new Button(shell, SWT.NONE);
-		button_1.setText("New Button");
-		button_1.setBounds(254, 53, 75, 25);
+		Button buttonVictims = new Button(shell, SWT.NONE);
+		buttonVictims.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				mainWindow.setChoosedStat("Victims");
+				shell.setVisible(false);
+			}
+		});
+		buttonVictims.setText("Victims");
+		buttonVictims.setBounds(254, 53, 75, 25);
 		
-		Button button_2 = new Button(shell, SWT.NONE);
-		button_2.setText("New Button");
-		button_2.setBounds(423, 53, 75, 25);
+		Button buttonIncubationTime = new Button(shell, SWT.NONE);
+		buttonIncubationTime.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				mainWindow.setChoosedStat("Incubation Time");
+				shell.setVisible(false);
+			}
+		});
+		buttonIncubationTime.setText("Inc. Time");
+		buttonIncubationTime.setBounds(423, 53, 75, 25);
 		
 		CLabel lblNewLabel = new CLabel(shell, SWT.NONE);
 		lblNewLabel.setForeground(SWTResourceManager.getColor(SWT.COLOR_RED));
@@ -81,5 +106,9 @@ public class ChooseStat {
 			}
 			
 		}
+	}
+
+	public void setMainWindow(Client window) {
+		this.mainWindow = window;
 	}
 }
