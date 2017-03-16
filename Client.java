@@ -73,9 +73,7 @@ public class Client {
 		setOtherPlayerCards(msg);
 		
 		if(msg.isYourTurn())
-			popup.open();
-		else
-			cm.standByForIncData();
+			popup.open();		
 	}
 	
 	public void setOtherPlayerCards(Message msg){
@@ -365,14 +363,23 @@ public class Client {
 		valLethality2 = valueLethality2;
 		valIncTime2 = valueIncTime2;
 		
+		Button btnNewButton_2 = new Button(shell, SWT.NONE);
+		btnNewButton_2.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseUp(MouseEvent e) {
+				
+			}
+		});
+		btnNewButton_2.setBounds(353, 210, 75, 25);
+		btnNewButton_2.setText("New Button");
+		
 		
 
 		shell.open();
 		shell.layout();
-		cm.standByForIncData();
 		while (!shell.isDisposed()) {
 			if (!display.readAndDispatch()) {
-				//display.sleep();
+				display.sleep();				
 			}
 		}
 	}

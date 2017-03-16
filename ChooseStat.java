@@ -96,7 +96,7 @@ public class ChooseStat {
 		    		progressBar.setState(SWT.ERROR);
 		    	progressBar.setSelection(i);
 		    	i -= 1;	        
-		    	display.timerExec(100, this);		    	
+		    	display.timerExec(1000, this);		    	
 		    }
 		};
 		display.timerExec(1, timer);
@@ -107,7 +107,7 @@ public class ChooseStat {
 		shell.layout();
 		while (!shell.isDisposed()) {
 			if (!display.readAndDispatch()) {
-				//display.sleep();
+				display.sleep();
 			}
 			
 		}
