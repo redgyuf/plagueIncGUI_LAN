@@ -21,12 +21,17 @@ import org.eclipse.swt.events.MouseEvent;
 public class Client {
 	
 	private Shell shell;
+	private Communicator cm;
+	private String choosedStat;
 	/**
 	 * Open the window.
 	 * @wbp.parser.entryPoint
 	 */
 	
 	
+	/**
+	 * @wbp.parser.entryPoint
+	 */
 	public void open(String[] data, ChooseStat popup) {
 		Display display = Display.getDefault();
 		Shell shell = new Shell();
@@ -36,6 +41,7 @@ public class Client {
 		shell.setText("Plague Inc. - Client");
 		
 		this.shell = shell;
+		this.cm = cm;
 		
 		Menu menu = new Menu(shell, SWT.BAR);
 		shell.setMenuBar(menu);
@@ -144,10 +150,6 @@ public class Client {
 		Label verticalSeperator = new Label(shell, SWT.SEPARATOR | SWT.VERTICAL);
 		verticalSeperator.setBounds(390, 10, 2, 522);
 		
-		Button ImageCurrentPlayerCardBackPlate = new Button(shell, SWT.NONE);
-		ImageCurrentPlayerCardBackPlate.setBounds(477, 130, 250, 370);
-		ImageCurrentPlayerCardBackPlate.setImage(SWTResourceManager.getImage("C:\\Users\\danEx\\Desktop\\CodeCool\\java_tw\\plagueIncGUI_LAN\\Client\\src\\pics\\cardBack.jpg"));
-		
 		Button btnNewButton = new Button(shell, SWT.NONE);
 		btnNewButton.addMouseListener(new MouseAdapter() {
 			@Override
@@ -157,6 +159,105 @@ public class Client {
 		});
 		btnNewButton.setBounds(289, 99, 75, 25);
 		btnNewButton.setText("New Button");
+		
+		Button btnNewButton_1 = new Button(shell, SWT.NONE);
+		btnNewButton_1.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseUp(MouseEvent e) {
+				
+			}
+		});
+		btnNewButton_1.setBounds(139, 99, 75, 25);
+		btnNewButton_1.setText("New Button");
+		
+		Canvas canvas = new Canvas(shell, SWT.NONE);
+		canvas.setBackground(SWTResourceManager.getColor(SWT.COLOR_BLACK));
+		canvas.setBounds(473, 130, 250, 370);
+		
+		Button button = new Button(canvas, SWT.FLAT | SWT.CENTER);
+		button.setImage(SWTResourceManager.getImage("C:\\Users\\danEx\\Desktop\\CodeCool\\java_tw\\plagueIncGUI_LAN\\Client\\src\\pics\\Plague_Inc_Evolved_Card_7.png"));
+		button.setBounds(10, 10, 230, 265);
+		
+		CLabel label = new CLabel(canvas, SWT.NONE);
+		label.setText("Lethality :");
+		label.setForeground(SWTResourceManager.getColor(SWT.COLOR_LIST_SELECTION));
+		label.setFont(SWTResourceManager.getFont("Segoe UI", 11, SWT.BOLD));
+		label.setBackground(SWTResourceManager.getColor(SWT.COLOR_WIDGET_FOREGROUND));
+		label.setBounds(10, 281, 99, 21);
+		
+		CLabel label_1 = new CLabel(canvas, SWT.NONE);
+		label_1.setText("New Label");
+		label_1.setForeground(SWTResourceManager.getColor(SWT.COLOR_LIST_SELECTION));
+		label_1.setBackground(SWTResourceManager.getColor(SWT.COLOR_BLACK));
+		label_1.setAlignment(SWT.CENTER);
+		label_1.setBounds(160, 281, 61, 21);
+		
+		Label label_2 = new Label(canvas, SWT.SEPARATOR | SWT.HORIZONTAL);
+		label_2.setBounds(10, 306, 230, 2);
+		
+		CLabel label_3 = new CLabel(canvas, SWT.NONE);
+		label_3.setText("Victims :");
+		label_3.setForeground(SWTResourceManager.getColor(SWT.COLOR_LIST_SELECTION));
+		label_3.setFont(SWTResourceManager.getFont("Segoe UI", 11, SWT.BOLD));
+		label_3.setBackground(SWTResourceManager.getColor(SWT.COLOR_WIDGET_FOREGROUND));
+		label_3.setBounds(10, 309, 99, 21);
+		
+		CLabel label_4 = new CLabel(canvas, SWT.NONE);
+		label_4.setText("New Label");
+		label_4.setForeground(SWTResourceManager.getColor(SWT.COLOR_LIST_SELECTION));
+		label_4.setBackground(SWTResourceManager.getColor(SWT.COLOR_BLACK));
+		label_4.setAlignment(SWT.CENTER);
+		label_4.setBounds(160, 309, 61, 21);
+		
+		Label label_5 = new Label(canvas, SWT.SEPARATOR | SWT.HORIZONTAL);
+		label_5.setBounds(10, 336, 230, 2);
+		
+		CLabel label_6 = new CLabel(canvas, SWT.NONE);
+		label_6.setText("Incubation Time :");
+		label_6.setForeground(SWTResourceManager.getColor(SWT.COLOR_LIST_SELECTION));
+		label_6.setFont(SWTResourceManager.getFont("Segoe UI", 11, SWT.BOLD));
+		label_6.setBackground(SWTResourceManager.getColor(SWT.COLOR_WIDGET_FOREGROUND));
+		label_6.setBounds(10, 339, 128, 21);
+		
+		CLabel label_7 = new CLabel(canvas, SWT.NONE);
+		label_7.setText("New Label");
+		label_7.setForeground(SWTResourceManager.getColor(SWT.COLOR_LIST_SELECTION));
+		label_7.setBackground(SWTResourceManager.getColor(SWT.COLOR_BLACK));
+		label_7.setAlignment(SWT.CENTER);
+		label_7.setBounds(160, 339, 61, 21);
+		
+		Button ImageCurrentPlayerCardBackPlate = new Button(canvas, SWT.NONE);
+		ImageCurrentPlayerCardBackPlate.setBounds(0, 0, 250, 370);
+		ImageCurrentPlayerCardBackPlate.setImage(SWTResourceManager.getImage("C:\\Users\\danEx\\Desktop\\CodeCool\\java_tw\\plagueIncGUI_LAN\\Client\\src\\pics\\cardBack.jpg"));
+		
+		Label label_8 = new Label(shell, SWT.SEPARATOR | SWT.HORIZONTAL);
+		label_8.setBounds(400, 80, 374, 2);
+		
+		ProgressBar progressBar = new ProgressBar(shell, SWT.NONE);
+		progressBar.setMaximum(10);
+		progressBar.setSelection(2);
+		progressBar.setBounds(537, 41, 170, 17);
+		
+		CLabel label_9 = new CLabel(shell, SWT.NONE);
+		label_9.setText("Unknown Soldier");
+		label_9.setFont(SWTResourceManager.getFont("Segoe UI", 11, SWT.ITALIC));
+		label_9.setBackground(SWTResourceManager.getColor(SWT.COLOR_TITLE_BACKGROUND_GRADIENT));
+		label_9.setAlignment(SWT.CENTER);
+		label_9.setBounds(537, 10, 170, 21);
+		
+		CLabel lblEnemysName = new CLabel(shell, SWT.NONE);
+		lblEnemysName.setText("Enemy name :");
+		lblEnemysName.setForeground(SWTResourceManager.getColor(SWT.COLOR_LIST_SELECTION));
+		lblEnemysName.setFont(SWTResourceManager.getFont("Segoe UI", 12, SWT.BOLD));
+		lblEnemysName.setBackground(SWTResourceManager.getColor(SWT.COLOR_TITLE_BACKGROUND_GRADIENT));
+		lblEnemysName.setBounds(400, 10, 113, 21);
+		
+		CLabel lblEnemyPoints = new CLabel(shell, SWT.NONE);
+		lblEnemyPoints.setText("Enemy points :");
+		lblEnemyPoints.setForeground(SWTResourceManager.getColor(SWT.COLOR_LIST_SELECTION));
+		lblEnemyPoints.setFont(SWTResourceManager.getFont("Segoe UI", 12, SWT.BOLD));
+		lblEnemyPoints.setBackground(SWTResourceManager.getColor(SWT.COLOR_TITLE_BACKGROUND_GRADIENT));
+		lblEnemyPoints.setBounds(400, 39, 119, 21);
 		
 		mntmExit.addSelectionListener(new SelectionAdapter() {
 			@Override
@@ -177,6 +278,18 @@ public class Client {
 			}
 		}
 	}
+	public Communicator getCm() {
+		return cm;
+	}
+	public void setChoosedStat(String choosedStat) {
+		this.choosedStat = choosedStat;
+	}
+	public void setCm(Communicator cm) {
+		this.cm = cm;
+	}
+	/**
+	 * @wbp.parser.entryPoint
+	 */
 	public Shell getShell() {
 		return shell;
 	}
