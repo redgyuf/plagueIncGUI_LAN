@@ -13,6 +13,9 @@ import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.custom.CLabel;
 import org.eclipse.swt.widgets.ProgressBar;
 import org.eclipse.wb.swt.SWTResourceManager;
+
+import server.Message;
+
 import org.eclipse.swt.widgets.Canvas;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.events.MouseAdapter;
@@ -22,17 +25,89 @@ public class Client {
 	
 	private Shell shell;
 	private Communicator cm;
-	private String choosedStat;
-	/**
-	 * Open the window.
-	 * @wbp.parser.entryPoint
-	 */
+	private ChooseStat popup;
+	private String choosedStat = "lethality";
 	
+	private CLabel playerName1;
+	private ProgressBar progbar1;
+	private String cardName1;
+	public String getChoosedStat() {
+		return choosedStat;
+	}
+	private CLabel valVictim1;
+	private CLabel valLethality1;
+	private CLabel valIncTime1;
+	
+	private CLabel playerName2;
+	private ProgressBar progbar2;
+	private String cardName2;
+	private CLabel valVictim2;
+	private CLabel valLethality2;
+	private CLabel valIncTime2;
+	
+	
+	
+	public void setCurrentPlayerCards(Message msg){
+		if(cm.getMyID() == 1){
+			if(msg.getPlayerName1() == null)
+				playerName1.setText("Unknown Soldier1");
+			else
+				playerName1.setText(msg.getPlayerName1());
+					
+			cardName1 = msg.getCardName1();
+			valVictim1.setText(String.valueOf(msg.getVictims1()));
+			valLethality1.setText(String.valueOf(msg.getLethality1()));
+			valIncTime1.setText(String.valueOf(msg.getIncubation1()));
+		}else{
+			if(msg.getPlayerName2() == null)
+				playerName1.setText("Unknown Soldier2");
+			else
+				playerName1.setText(msg.getPlayerName2());
+					
+			cardName1 = msg.getCardName2();
+			valVictim1.setText(String.valueOf(msg.getVictims2()));
+			valLethality1.setText(String.valueOf(msg.getLethality2()));
+			valIncTime1.setText(String.valueOf(msg.getIncubation2()));
+		}
+		
+		setOtherPlayerCards(msg);
+		
+		if(msg.isYourTurn())
+			popup.open();
+		else
+			cm.standByForIncData();
+	}
+	
+	public void setOtherPlayerCards(Message msg){
+		if(cm.getMyID() == 2){
+			if(msg.getPlayerName1() == null)
+				playerName2.setText("Unknown Soldier1");
+			else
+				playerName2.setText(msg.getPlayerName1());
+					
+			cardName2 = msg.getCardName1();
+			valVictim2.setText(String.valueOf(msg.getVictims1()));
+			valLethality2.setText(String.valueOf(msg.getLethality1()));
+			valIncTime2.setText(String.valueOf(msg.getIncubation1()));
+		}else{
+			if(msg.getPlayerName2() == null)
+				playerName2.setText("Unknown Soldier2");
+			else
+				playerName2.setText(msg.getPlayerName2());
+					
+			cardName2 = msg.getCardName2();
+			valVictim2.setText(String.valueOf(msg.getVictims2()));
+			valLethality2.setText(String.valueOf(msg.getLethality2()));
+			valIncTime2.setText(String.valueOf(msg.getIncubation2()));
+		}	
+	}
 	
 	/**
 	 * @wbp.parser.entryPoint
 	 */
 	public void open(String[] data, ChooseStat popup) {
+		
+		
 		Display display = Display.getDefault();
 		Shell shell = new Shell();
 		shell.setImage(SWTResourceManager.getImage("C:\\Users\\danEx\\Desktop\\CodeCool\\java_tw\\plagueIncGUI_LAN\\Client\\src\\pics\\5fb2756cdf746a3ec3b99c89a0675bac407.jpg"));
@@ -41,7 +116,7 @@ public class Client {
 		shell.setText("Plague Inc. - Client");
 		
 		this.shell = shell;
-		this.cm = cm;
+		this.popup = popup;
 		
 		Menu menu = new Menu(shell, SWT.BAR);
 		shell.setMenuBar(menu);
@@ -63,7 +138,7 @@ public class Client {
 		ProgressBar progbarCurrentPlayer = new ProgressBar(shell, SWT.NONE);
 		progbarCurrentPlayer.setMaximum(10);		
 		progbarCurrentPlayer.setBounds(118, 41, 170, 17);
-		progbarCurrentPlayer.setSelection(2);
+		progbarCurrentPlayer.setSelection(0);
 		
 		CLabel lblCurrentPlayerNAME = new CLabel(shell, SWT.NONE);
 		lblCurrentPlayerNAME.setFont(SWTResourceManager.getFont("Segoe UI", 11, SWT.ITALIC));
@@ -81,6 +156,21 @@ public class Client {
 		
 		MenuItem mntmExit = new MenuItem(menu_File, SWT.NONE);
 		mntmExit.setText("Exit");
+		//File menu END
+		
+		//Settings menu START
+		MenuItem mntmSettings = new MenuItem(menu, SWT.CASCADE);
+		mntmSettings.setText("Settings");
+		
+		Menu menu_1 = new Menu(mntmSettings);
+		mntmSettings.setMenu(menu_1);
+		
+		MenuItem mntmSetToPlayer = new MenuItem(menu_1, SWT.RADIO);
+		mntmSetToPlayer.setText("Set Client to Player1");
+		
+		MenuItem mntmSetClientTo = new MenuItem(menu_1, SWT.RADIO);
+		mntmSetClientTo.setText("Set Client to Player2");
+		//Settings menu END
 		
 		Label leftHorizontalSeperator = new Label(shell, SWT.SEPARATOR | SWT.HORIZONTAL);
 		leftHorizontalSeperator.setBounds(10, 80, 374, 2);
@@ -89,11 +179,7 @@ public class Client {
 		canvasCurrentPlayerCard.setBackground(SWTResourceManager.getColor(SWT.COLOR_BLACK));
 		canvasCurrentPlayerCard.setBounds(66, 130, 250, 370);
 		Button ImageCurrentPlayerCard = new Button(canvasCurrentPlayerCard, SWT.FLAT | SWT.CENTER);
-		ImageCurrentPlayerCard.addSelectionListener(new SelectionAdapter() {
-			@Override
-			public void widgetSelected(SelectionEvent e) {
-			}
-		});
+		
 		ImageCurrentPlayerCard.setImage(SWTResourceManager.getImage("C:\\Users\\danEx\\Desktop\\CodeCool\\java_tw\\plagueIncGUI_LAN\\Client\\src\\pics\\Plague_Inc_Evolved_Card_7.png"));
 		ImageCurrentPlayerCard.setBounds(10, 10, 230, 265);		
 		
@@ -145,6 +231,10 @@ public class Client {
 		valueIncubationTime.setText("New Label");
 		valueIncubationTime.setBounds(160, 339, 61, 21);
 		
+		Button ImageCurrentPlayerCardBackPlate = new Button(canvasCurrentPlayerCard, SWT.NONE);
+		ImageCurrentPlayerCardBackPlate.setBounds(189, 43, 250, 370);
+		ImageCurrentPlayerCardBackPlate.setImage(SWTResourceManager.getImage("C:\\Users\\danEx\\Desktop\\CodeCool\\java_tw\\plagueIncGUI_LAN\\Client\\src\\pics\\cardBack.jpg"));
+		
 			
 		
 		Label verticalSeperator = new Label(shell, SWT.SEPARATOR | SWT.VERTICAL);
@@ -164,86 +254,83 @@ public class Client {
 		btnNewButton_1.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseUp(MouseEvent e) {
-				
+				cm.standByForIncData();
 			}
 		});
 		btnNewButton_1.setBounds(139, 99, 75, 25);
 		btnNewButton_1.setText("New Button");
 		
-		Canvas canvas = new Canvas(shell, SWT.NONE);
-		canvas.setBackground(SWTResourceManager.getColor(SWT.COLOR_BLACK));
-		canvas.setBounds(473, 130, 250, 370);
+		Canvas canvasEnemyPlayerCard = new Canvas(shell, SWT.NONE);
+		canvasEnemyPlayerCard.setBackground(SWTResourceManager.getColor(SWT.COLOR_BLACK));
+		canvasEnemyPlayerCard.setBounds(473, 130, 250, 370);
 		
-		Button button = new Button(canvas, SWT.FLAT | SWT.CENTER);
+		Button button = new Button(canvasEnemyPlayerCard, SWT.FLAT | SWT.CENTER);
 		button.setImage(SWTResourceManager.getImage("C:\\Users\\danEx\\Desktop\\CodeCool\\java_tw\\plagueIncGUI_LAN\\Client\\src\\pics\\Plague_Inc_Evolved_Card_7.png"));
 		button.setBounds(10, 10, 230, 265);
 		
-		CLabel label = new CLabel(canvas, SWT.NONE);
-		label.setText("Lethality :");
-		label.setForeground(SWTResourceManager.getColor(SWT.COLOR_LIST_SELECTION));
-		label.setFont(SWTResourceManager.getFont("Segoe UI", 11, SWT.BOLD));
-		label.setBackground(SWTResourceManager.getColor(SWT.COLOR_WIDGET_FOREGROUND));
-		label.setBounds(10, 281, 99, 21);
+		CLabel lblLethality2 = new CLabel(canvasEnemyPlayerCard, SWT.NONE);
+		lblLethality2.setText("Lethality :");
+		lblLethality2.setForeground(SWTResourceManager.getColor(SWT.COLOR_LIST_SELECTION));
+		lblLethality2.setFont(SWTResourceManager.getFont("Segoe UI", 11, SWT.BOLD));
+		lblLethality2.setBackground(SWTResourceManager.getColor(SWT.COLOR_WIDGET_FOREGROUND));
+		lblLethality2.setBounds(10, 281, 99, 21);
 		
-		CLabel label_1 = new CLabel(canvas, SWT.NONE);
-		label_1.setText("New Label");
-		label_1.setForeground(SWTResourceManager.getColor(SWT.COLOR_LIST_SELECTION));
-		label_1.setBackground(SWTResourceManager.getColor(SWT.COLOR_BLACK));
-		label_1.setAlignment(SWT.CENTER);
-		label_1.setBounds(160, 281, 61, 21);
+		CLabel valueLethality2 = new CLabel(canvasEnemyPlayerCard, SWT.NONE);
+		valueLethality2.setText("New Label");
+		valueLethality2.setForeground(SWTResourceManager.getColor(SWT.COLOR_LIST_SELECTION));
+		valueLethality2.setBackground(SWTResourceManager.getColor(SWT.COLOR_BLACK));
+		valueLethality2.setAlignment(SWT.CENTER);
+		valueLethality2.setBounds(160, 281, 61, 21);
 		
-		Label label_2 = new Label(canvas, SWT.SEPARATOR | SWT.HORIZONTAL);
+		Label label_2 = new Label(canvasEnemyPlayerCard, SWT.SEPARATOR | SWT.HORIZONTAL);
 		label_2.setBounds(10, 306, 230, 2);
 		
-		CLabel label_3 = new CLabel(canvas, SWT.NONE);
-		label_3.setText("Victims :");
-		label_3.setForeground(SWTResourceManager.getColor(SWT.COLOR_LIST_SELECTION));
-		label_3.setFont(SWTResourceManager.getFont("Segoe UI", 11, SWT.BOLD));
-		label_3.setBackground(SWTResourceManager.getColor(SWT.COLOR_WIDGET_FOREGROUND));
-		label_3.setBounds(10, 309, 99, 21);
+		CLabel lblVictims2 = new CLabel(canvasEnemyPlayerCard, SWT.NONE);
+		lblVictims2.setText("Victims :");
+		lblVictims2.setForeground(SWTResourceManager.getColor(SWT.COLOR_LIST_SELECTION));
+		lblVictims2.setFont(SWTResourceManager.getFont("Segoe UI", 11, SWT.BOLD));
+		lblVictims2.setBackground(SWTResourceManager.getColor(SWT.COLOR_WIDGET_FOREGROUND));
+		lblVictims2.setBounds(10, 309, 99, 21);
 		
-		CLabel label_4 = new CLabel(canvas, SWT.NONE);
-		label_4.setText("New Label");
-		label_4.setForeground(SWTResourceManager.getColor(SWT.COLOR_LIST_SELECTION));
-		label_4.setBackground(SWTResourceManager.getColor(SWT.COLOR_BLACK));
-		label_4.setAlignment(SWT.CENTER);
-		label_4.setBounds(160, 309, 61, 21);
+		CLabel valueVictims2 = new CLabel(canvasEnemyPlayerCard, SWT.NONE);
+		valueVictims2.setText("New Label");
+		valueVictims2.setForeground(SWTResourceManager.getColor(SWT.COLOR_LIST_SELECTION));
+		valueVictims2.setBackground(SWTResourceManager.getColor(SWT.COLOR_BLACK));
+		valueVictims2.setAlignment(SWT.CENTER);
+		valueVictims2.setBounds(160, 309, 61, 21);
 		
-		Label label_5 = new Label(canvas, SWT.SEPARATOR | SWT.HORIZONTAL);
+		Label label_5 = new Label(canvasEnemyPlayerCard, SWT.SEPARATOR | SWT.HORIZONTAL);
 		label_5.setBounds(10, 336, 230, 2);
 		
-		CLabel label_6 = new CLabel(canvas, SWT.NONE);
-		label_6.setText("Incubation Time :");
-		label_6.setForeground(SWTResourceManager.getColor(SWT.COLOR_LIST_SELECTION));
-		label_6.setFont(SWTResourceManager.getFont("Segoe UI", 11, SWT.BOLD));
-		label_6.setBackground(SWTResourceManager.getColor(SWT.COLOR_WIDGET_FOREGROUND));
-		label_6.setBounds(10, 339, 128, 21);
+		CLabel lblIncTime2 = new CLabel(canvasEnemyPlayerCard, SWT.NONE);
+		lblIncTime2.setText("Incubation Time :");
+		lblIncTime2.setForeground(SWTResourceManager.getColor(SWT.COLOR_LIST_SELECTION));
+		lblIncTime2.setFont(SWTResourceManager.getFont("Segoe UI", 11, SWT.BOLD));
+		lblIncTime2.setBackground(SWTResourceManager.getColor(SWT.COLOR_WIDGET_FOREGROUND));
+		lblIncTime2.setBounds(10, 339, 128, 21);
 		
-		CLabel label_7 = new CLabel(canvas, SWT.NONE);
-		label_7.setText("New Label");
-		label_7.setForeground(SWTResourceManager.getColor(SWT.COLOR_LIST_SELECTION));
-		label_7.setBackground(SWTResourceManager.getColor(SWT.COLOR_BLACK));
-		label_7.setAlignment(SWT.CENTER);
-		label_7.setBounds(160, 339, 61, 21);
+		CLabel valueIncTime2 = new CLabel(canvasEnemyPlayerCard, SWT.NONE);
+		valueIncTime2.setText("New Label");
+		valueIncTime2.setForeground(SWTResourceManager.getColor(SWT.COLOR_LIST_SELECTION));
+		valueIncTime2.setBackground(SWTResourceManager.getColor(SWT.COLOR_BLACK));
+		valueIncTime2.setAlignment(SWT.CENTER);
+		valueIncTime2.setBounds(160, 339, 61, 21);
 		
-		Button ImageCurrentPlayerCardBackPlate = new Button(canvas, SWT.NONE);
-		ImageCurrentPlayerCardBackPlate.setBounds(0, 0, 250, 370);
-		ImageCurrentPlayerCardBackPlate.setImage(SWTResourceManager.getImage("C:\\Users\\danEx\\Desktop\\CodeCool\\java_tw\\plagueIncGUI_LAN\\Client\\src\\pics\\cardBack.jpg"));
+		Label rightHorizontalSeperator = new Label(shell, SWT.SEPARATOR | SWT.HORIZONTAL);
+		rightHorizontalSeperator.setBounds(400, 80, 374, 2);
 		
-		Label label_8 = new Label(shell, SWT.SEPARATOR | SWT.HORIZONTAL);
-		label_8.setBounds(400, 80, 374, 2);
+		ProgressBar progbarEnemy = new ProgressBar(shell, SWT.NONE);
+		progbarEnemy.setState(SWT.ERROR);
+		progbarEnemy.setMaximum(10);
+		progbarEnemy.setSelection(2);
+		progbarEnemy.setBounds(537, 41, 170, 17);
 		
-		ProgressBar progressBar = new ProgressBar(shell, SWT.NONE);
-		progressBar.setMaximum(10);
-		progressBar.setSelection(2);
-		progressBar.setBounds(537, 41, 170, 17);
-		
-		CLabel label_9 = new CLabel(shell, SWT.NONE);
-		label_9.setText("Unknown Soldier");
-		label_9.setFont(SWTResourceManager.getFont("Segoe UI", 11, SWT.ITALIC));
-		label_9.setBackground(SWTResourceManager.getColor(SWT.COLOR_TITLE_BACKGROUND_GRADIENT));
-		label_9.setAlignment(SWT.CENTER);
-		label_9.setBounds(537, 10, 170, 21);
+		CLabel lblEnemyPlayerNAME = new CLabel(shell, SWT.NONE);
+		lblEnemyPlayerNAME.setText("Unknown Soldier");
+		lblEnemyPlayerNAME.setFont(SWTResourceManager.getFont("Segoe UI", 11, SWT.ITALIC));
+		lblEnemyPlayerNAME.setBackground(SWTResourceManager.getColor(SWT.COLOR_TITLE_BACKGROUND_GRADIENT));
+		lblEnemyPlayerNAME.setAlignment(SWT.CENTER);
+		lblEnemyPlayerNAME.setBounds(537, 10, 170, 21);
 		
 		CLabel lblEnemysName = new CLabel(shell, SWT.NONE);
 		lblEnemysName.setText("Enemy name :");
@@ -265,16 +352,27 @@ public class Client {
 				shell.close();
 			}
 		});
-		//File menu END
 		
+		playerName1 = lblCurrentPlayerNAME;
+		progbar1 = progbarCurrentPlayer;
+		valVictim1 = valueVictims;
+		valLethality1 = valueLethality;
+		valIncTime1 = valueIncubationTime;
+		
+		playerName2 = lblEnemyPlayerNAME;
+		progbar2 = progbarEnemy;
+		valVictim2 = valueVictims2;
+		valLethality2 = valueLethality2;
+		valIncTime2 = valueIncTime2;
 		
 		
 
 		shell.open();
 		shell.layout();
+		cm.standByForIncData();
 		while (!shell.isDisposed()) {
 			if (!display.readAndDispatch()) {
-				display.sleep();
+				//display.sleep();
 			}
 		}
 	}

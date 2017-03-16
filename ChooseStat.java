@@ -17,6 +17,7 @@ import org.eclipse.swt.events.SelectionEvent;
 
 public class ChooseStat {
 	private Client mainWindow;
+	private Communicator cm;
 
 	/**
 	 * Open the window.
@@ -41,8 +42,9 @@ public class ChooseStat {
 		buttonLethality.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseUp(MouseEvent e) {
-				mainWindow.setChoosedStat("Lethality");
+				mainWindow.setChoosedStat("lethality");
 				shell.setVisible(false);
+				cm.sendMessage();
 			}
 		});
 		buttonLethality.setText("Lethality");
@@ -52,8 +54,9 @@ public class ChooseStat {
 		buttonVictims.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
-				mainWindow.setChoosedStat("Victims");
+				mainWindow.setChoosedStat("victims");
 				shell.setVisible(false);
+				cm.sendMessage();
 			}
 		});
 		buttonVictims.setText("Victims");
@@ -63,8 +66,9 @@ public class ChooseStat {
 		buttonIncubationTime.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
-				mainWindow.setChoosedStat("Incubation Time");
+				mainWindow.setChoosedStat("incubationTime");				
 				shell.setVisible(false);
+				cm.sendMessage();
 			}
 		});
 		buttonIncubationTime.setText("Inc. Time");
@@ -81,8 +85,9 @@ public class ChooseStat {
 			int i = 100;
 		    public void run() {		
 		    	if(i <= 0)
-		    		shell.setVisible(false);
-		    	
+		    		//if(!shell.getVisible())
+		    			//cm.sendMessage();		    			
+		    		shell.setVisible(false);		    	
 		    	if(i > 50)
 		    		progressBar.setState(SWT.NORMAL);
 		    	else
@@ -102,10 +107,14 @@ public class ChooseStat {
 		shell.layout();
 		while (!shell.isDisposed()) {
 			if (!display.readAndDispatch()) {
-				display.sleep();
+				//display.sleep();
 			}
 			
 		}
+	}
+
+	public void setCm(Communicator cm) {
+		this.cm = cm;
 	}
 
 	public void setMainWindow(Client window) {
